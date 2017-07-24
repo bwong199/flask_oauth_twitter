@@ -21,13 +21,10 @@ def homepage():
 
 @app.route('/login/twitter')
 def twitter_login():
+    if 'screen_name' in session:
+        return redirect(url_for("profile"))
     request_token = get_request_token()
-    print(request_token)
     session['request_token'] = request_token
-    session['ABC'] = "ABC"
-    print("session request token 1 " + str(session['request_token']))
-    print(session['ABC'])
-    print(session)
     return redirect(get_oauth_verifier_url(request_token))
 
     # redirecting the user to Twitter so they can confirm authorization
@@ -35,9 +32,6 @@ def twitter_login():
 @app.route('/auth/twitter')  # http://127.0.0.1:3333/auth/twitter?oauth_verifier=1234567
 def twitter_auth():
     oauth_verifier = request.args.get('oauth_verifier')
-    print("oauth verifier " + str(oauth_verifier))
-    print("All session " + str(session))
-    print("request token token 2 " + str(session['request_token']))
     access_token = get_access_token(session['request_token'], oauth_verifier)
     print(access_token['screen_name'])
 
