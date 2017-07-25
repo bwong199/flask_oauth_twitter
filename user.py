@@ -38,10 +38,11 @@ class User:
         # Make TWitter API call
         response, content = authorized_client.request(
             uri, verb)
+        print(response.status)
+        print(json.loads(content.decode('utf-8')))
         if response.status != 200:
             print("An error occurred when searching!")
-
-        return json.loads(content.encode('utf-8'))
+        return json.loads(content.decode('utf-8'))
 
 
 

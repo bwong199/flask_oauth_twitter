@@ -13,7 +13,6 @@ Database.initialise(host='localhost', database='learning', user='postgres', pass
 def load_user():
     if 'screen_name' in session:
         g.user = User.load_from_db_by_screen_name(session['screen_name'])
-        print(g.user)
 
 @app.route('/')
 def homepage():
@@ -55,5 +54,15 @@ def logout():
 def profile():
     print(g.user)
     return render_template("profile.html", user=g.user)
+
+
+@app.route('/search')
+def search():
+    query = request.args.get('q')
+    tweets = g.user.twitter_request('https://api.twitter.com/1.1/search/tweets.json?q={}'.format(query))
+    print(tweets)
+    tweet_texts = [tweet['text'] for tweet in tweets['statuses']]
+
+    return render_template('search.html', content=tweet_texts)
 
 app.run(port=3333)
